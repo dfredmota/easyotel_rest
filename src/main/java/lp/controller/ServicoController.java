@@ -1,5 +1,6 @@
 package lp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import lp.model.Servico;
 import lp.service.ServicoService;
+import lp.util.ApiError;
 
 
 @RestController
@@ -40,24 +42,51 @@ public class ServicoController {
 	// curl --header "Content-Type: application/json" --request POST --data
 	// '{"description":"xyz"}' http://localhost:8080/tarefas_rest/todo
 	// @RequestMapping(value = "/todo", method = RequestMethod.POST)
-	@RequestMapping(value = "/todo", method = RequestMethod.POST)
+	@RequestMapping(value = "/servico", method = RequestMethod.POST)
 	@CrossOrigin(origins = "http://localhost:3000")
-	public ResponseEntity<Void> savetodo(@RequestBody Servico todo, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<Object> salvarServico(@RequestBody Servico todo, UriComponentsBuilder ucBuilder) {
 
-		service.create(todo);
+		List<String> erros = new ArrayList<String>();
+		
+		if(todo != null) {
+			
+			if(todo.getDescricao() == null || todo.getDescricao().trim().isEmpty()) {
+				
+				erros.add("A descrição é obrigatória.");
+			}
+			
+			if(todo.getValor() == null) {
+				
+				erros.add("Valor é obrigatório");
+			}
+		}
+		
+		if(!erros.isEmpty()) {
+			
+			 ApiError apiError = 
+				      new ApiError(HttpStatus.BAD_REQUEST, "ssss", erros);
+				    return new ResponseEntity<Object>(
+				      apiError, new HttpHeaders(), apiError.getStatus());
+		}else {
+			
+			service.create(todo);
 
-		System.out.println("Entrou");
+			System.out.println("Entrou");
 
-		HttpHeaders headers = new HttpHeaders();
+			HttpHeaders headers = new HttpHeaders();
 
-		headers.setLocation(ucBuilder.path("/todo/{id}").buildAndExpand(todo.getId()).toUri());
+			headers.setLocation(ucBuilder.path("/servico/{id}").buildAndExpand(todo.getId()).toUri());
+			
+			return new ResponseEntity<Object>(headers, HttpStatus.CREATED);
+			
+		}
+		
 
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 
 	// curl --header "Content-Type: application/json" --request DELETE
 	// http://localhost:8080/tarefas_rest/todo/2
-	@RequestMapping(value = "/todo/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/servico/{id}", method = RequestMethod.DELETE)
 	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<?> deletetodo(@PathVariable("id") String id) {
 
@@ -73,7 +102,7 @@ public class ServicoController {
 
 	// curl -X PUT -H "Content-Type: application/json" -d '{"done": "true"}'
 	// http://localhost:8080/tarefas_rest/todo/5
-	@RequestMapping(value = "/todo/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/servico/{id}", method = RequestMethod.PUT)
 	@CrossOrigin(origins = "http://localhost:3000")
 	public Servico updatetodo(@PathVariable("id") String id, @RequestBody Servico done) {
 
