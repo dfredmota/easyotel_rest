@@ -7,6 +7,8 @@
              
 	<persistence-unit name="entityManagerFactory" transaction-type="RESOURCE_LOCAL">
 		<class>lp.model.Servico</class>
+		<class>lp.model.GrupoCardapio</class>
+		<class>lp.model.ClienteApp</class>
 	<properties>
 		
 	  <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/easy_hotel"/>

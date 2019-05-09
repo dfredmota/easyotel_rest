@@ -6,10 +6,12 @@
              version="2.1">
              
 	<persistence-unit name="entityManagerFactory" transaction-type="RESOURCE_LOCAL">
-		<class>lp.model.Todo</class>
+		<class>lp.model.Servico</class>
+		<class>lp.model.GrupoCardapio</class>
+		<class>lp.model.ClienteApp</class>
 	<properties>
 		
-	  <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/tarefas"/>
+	  <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/easy_hotel"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.password" value="Root@3873"/>
       <property name="hibernate.show_sql" value="true"/>
